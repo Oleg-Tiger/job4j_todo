@@ -13,7 +13,7 @@
     <groupId>ru.job4j</groupId>
     <artifactId>job4j_todo</artifactId>
     <version>1.0</version>
-    <name>Job4j Cars</name>
+    <name>Job4j Todo</name>
 
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
