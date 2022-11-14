@@ -24,4 +24,18 @@ public class TaskRepository {
         return result;
     }
 
+    public Task add(Task task) {
+        Session session = sf.openSession();
+        try {
+            session.beginTransaction();
+            session.save(task);
+            session.getTransaction().commit();
+        } catch (Exception e) {
+            session.getTransaction().rollback();
+        } finally {
+            session.close();
+        }
+        return task;
+    }
+
 }

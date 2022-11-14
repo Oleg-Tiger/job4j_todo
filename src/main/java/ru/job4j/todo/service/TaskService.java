@@ -18,4 +18,8 @@ public class TaskService {
     public List<Task> findAll() {
         return repository.findAll();
     }
+
+    public Task add(Task task) {
+        return repository.add(task);
+    }
 }

@@ -13,7 +13,14 @@ public class Task {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+    private String name;
     private String description;
     private final LocalDateTime created = LocalDateTime.now();
     private boolean done = false;
+
+    public Task(int id, String name, String description) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+    }
 }

@@ -25,9 +25,9 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
             <div class="navbar-nav">
-                <a class="nav-item nav-link active" href="#">Все <span class="sr-only">(current)</span></a>
-                <a class="nav-item nav-link" th:href="@{/completedTasks}">Выполненные</a>
-                <a class="nav-item nav-link" th:href="@{/newTasks}">Новые</a>
+                <a class="nav-item nav-link active" href="#">Все задачи <span class="sr-only">(current)</span></a>
+                <a class="nav-item nav-link" th:href="@{/completedTasks}">Выполненные задачи</a>
+                <a class="nav-item nav-link" th:href="@{/newTasks}">Новые задачи</a>
                 <a class="nav-item nav-link" th:href="@{/formAddTask}">Добавить задачу</a>
             </div>
         </div>
@@ -52,12 +52,10 @@
                     <span th:text="${task.created.toLocalDate}"></span>
                 </td>
                 <td>
-                    <span th:if="${task.done}">
-                        <span th:text="Выполнена"></span>
-                    </span>
-                    <span th:if="${!task.done}">
-                        <span th:text="Ожидает выполнения"></span>
-                    </span>
+                    <div th:switch="${task.done}">
+                        <p th:case="true">Выполнена</p>
+                        <p th:case="*">Новая</p>
+                    </div>
                 </td>
             </tr>
             </tbody>
