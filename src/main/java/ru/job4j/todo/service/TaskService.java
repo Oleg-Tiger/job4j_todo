@@ -22,4 +22,8 @@ public class TaskService {
     public Task add(Task task) {
         return repository.add(task);
     }
+
+    public  List<Task> findFilter(boolean done) {
+        return repository.findFilter(done);
+    }
 }

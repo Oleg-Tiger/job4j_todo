@@ -34,4 +34,17 @@ public class TaskController {
         service.add(task);
         return "redirect:/allTasks";
     }
+
+    @GetMapping("/completedTasks")
+    public String completedTasks(Model model) {
+        model.addAttribute("completedTasks", service.findFilter(true));
+        return "completedTasks";
+    }
+
+    @GetMapping("/newTasks")
+    public String newTasks(Model model) {
+        model.addAttribute("newTasks", service.findFilter(false));
+        return "newTasks";
+    }
+
 }
