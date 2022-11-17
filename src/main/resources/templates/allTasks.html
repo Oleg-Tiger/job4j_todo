@@ -58,10 +58,12 @@
                     <span th:text="${task.created.toLocalDate}"></span>
                 </td>
                 <td>
-                    <div th:switch="${task.done}">
-                        <p th:case="true">Выполнена</p>
-                        <p th:case="*">Новая</p>
-                    </div>
+                    <span th:if="${task.done}">
+                            <div class="p-3 mb-2 bg-success text-dark">Выполнена</div>
+                    </span>
+                    <span th:if="${!task.done}">
+                           <div class="p-3 mb-2 bg-warning text-dark">Ожидает выполнения</div>
+                    </span>
                 </td>
             </tr>
             </tbody>
