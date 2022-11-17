@@ -18,8 +18,12 @@
 </head>
 <body>
 <div class="container">
+    <em>
+        <div style="color:#11EE11">
+            <h5>TODO list</h5>
+        </div>
+    </em>
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <a class="navbar-brand" href="#">TODO list</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -46,7 +50,11 @@
             <tr th:each="task: ${tasks}">
                 <td th:text="${task.id}"></td>
                 <td>
-                    <span th:text="${task.name}"></span>
+                    <p>
+                        <a class="text-dark" th:href="@{|/taskDescription/${task.id}|}">
+                            <span th:text="${task.name}"></span>
+                        </a>
+                    </p>
                 </td>
                 <td>
                     <span th:text="${task.created.toLocalDate}"></span>

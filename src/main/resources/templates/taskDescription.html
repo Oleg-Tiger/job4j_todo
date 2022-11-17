@@ -1,10 +1,80 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+          integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+            integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+            integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+            integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <title>TODO</title>
 </head>
 <body>
-
+<div class="container">
+    <em>
+        <div style="color:#11EE11">
+            <h5>TODO list</h5>
+        </div>
+    </em>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+            <div class="navbar-nav">
+                <a class="nav-item nav-link" th:href="@{/allTasks}">Все задачи</a>
+                <a class="nav-item nav-link" th:href="@{/completedTasks}">Выполненные задачи</a>
+                <a class="nav-item nav-link" th:href="@{/newTasks}">Новые задачи</a>
+                <a class="nav-item nav-link" th:href="@{/formAddTask}">Добавить задачу</a>
+            </div>
+        </div>
+    </nav>
+    <div class="container">
+        <br>
+        <br>
+        <td>
+            <h2>
+                <span th:text="${task.name}"></span>
+                <span th:if="${task.done}">
+                <i class="fa fa-check-square-o"></i>
+                </span>
+                <span th:if="${!task.done}">
+                <i class="fa fa-square-o"></i>
+                </span>
+            </h2>
+        </td>
+        <br>
+        <font size="4">
+        <em>
+        <td th:text="${task.description}"></td>
+        </em>
+        </font>
+        <br>
+        <br>
+        <br>
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+                <div class="navbar-nav">
+                    <span th:if="${!task.done}">
+                        <a class="nav-item nav-link" th:href="@{|/complete/${task.id}|}">
+                            <button type="submit" class="btn btn-primary">Выполнено</button>
+                        </a>
+                    </span>
+                    <a class="nav-item nav-link" th:href="@{/sessions}">
+                        <button type="submit" class="btn btn-primary">Редактировать</button>
+                    </a>
+                    <a class="nav-item nav-link" th:href="@{/sessions}">
+                        <button type="submit" class="btn btn-primary">Удалить</button>
+                    </a>
+            </div>
+        </nav>
+    </div>
+</div>
 </body>
 </html>

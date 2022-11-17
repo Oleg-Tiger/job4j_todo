@@ -2,28 +2,42 @@ package ru.job4j.todo.service;
 
 import org.springframework.stereotype.Service;
 import ru.job4j.todo.model.Task;
-import ru.job4j.todo.repository.TaskRepository;
+import ru.job4j.todo.repository.TaskStore;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
-public class TaskService {
+public class TaskService implements AbstractTaskService {
 
-    private final TaskRepository repository;
+    private final TaskStore store;
 
-    public TaskService(TaskRepository repository) {
-        this.repository = repository;
+    public TaskService(TaskStore store) {
+        this.store = store;
     }
 
+    @Override
     public List<Task> findAll() {
-        return repository.findAll();
+        return store.findAll();
     }
 
+    @Override
     public Task add(Task task) {
-        return repository.add(task);
+        return store.add(task);
     }
 
+    @Override
     public  List<Task> findFilter(boolean done) {
-        return repository.findFilter(done);
+        return store.findFilter(done);
+    }
+
+    @Override
+    public Optional<Task> findById(Integer id) {
+        return store.findById(id);
+    }
+
+    @Override
+    public void updateDone(Task task) {
+        store.updateDone(task);
     }
 }

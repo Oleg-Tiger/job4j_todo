@@ -4,16 +4,18 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import ru.job4j.todo.model.Task;
+import ru.job4j.todo.service.AbstractTaskService;
 import ru.job4j.todo.service.TaskService;
 
 @Controller
 public class TaskController {
 
-    private final TaskService service;
+    private final AbstractTaskService service;
 
-    public TaskController(TaskService service) {
+    public TaskController(AbstractTaskService service) {
         this.service = service;
     }
 
@@ -45,6 +47,22 @@ public class TaskController {
     public String newTasks(Model model) {
         model.addAttribute("newTasks", service.findFilter(false));
         return "newTasks";
+    }
+
+    @GetMapping("/taskDescription/{taskId}")
+    public String taskDescription(Model model, @PathVariable("taskId") int id) {
+        Task task = service.findById(id).get();
+        model.addAttribute("task", task);
+        return "taskDescription";
+    }
+
+    @GetMapping("/complete/{taskId}")
+    public String taskComplete(Model model, @PathVariable("taskId") int id) {
+        Task task = service.findById(id).get();
+        task.setDone(true);
+        service.updateDone(task);
+        model.addAttribute("task", task);
+        return "taskDescription";
     }
 
 }

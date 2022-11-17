@@ -6,9 +6,10 @@ import org.hibernate.query.Query;
 import org.springframework.stereotype.Repository;
 import ru.job4j.todo.model.Task;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
-public class TaskRepository {
+public class TaskRepository implements TaskStore {
 
     private final SessionFactory sf;
 
@@ -16,6 +17,7 @@ public class TaskRepository {
         this.sf = sf;
     }
 
+    @Override
     public List<Task> findAll() {
         Session session = sf.openSession();
         session.beginTransaction();
@@ -25,6 +27,7 @@ public class TaskRepository {
         return result;
     }
 
+    @Override
     public Task add(Task task) {
         Session session = sf.openSession();
         try {
@@ -39,6 +42,7 @@ public class TaskRepository {
         return task;
     }
 
+    @Override
     public  List<Task> findFilter(boolean done) {
         Session session = sf.openSession();
         Query<Task> query = session.createQuery(
@@ -47,5 +51,25 @@ public class TaskRepository {
         List<Task> result = query.getResultList();
         session.close();
         return result;
+    }
+
+    @Override
+    public Optional<Task> findById(Integer id) {
+        Session session = sf.openSession();
+        Query<Task> query = session.createQuery(
+                "from Task as t where t.id = :fId", Task.class);
+        query.setParameter("fId", id);
+        Optional<Task> result = query.uniqueResultOptional();
+        session.close();
+        return result;
+    }
+
+    @Override
+    public void updateDone(Task task) {
+        Session session = sf.openSession();
+        session.beginTransaction();
+        session.update(task);
+        session.getTransaction().commit();
+        session.close();
     }
 }
