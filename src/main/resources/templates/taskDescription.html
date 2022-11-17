@@ -66,6 +66,11 @@
                             <button type="submit" class="btn btn-primary">Выполнено</button>
                         </a>
                     </span>
+                    <span th:if="${task.done}">
+                        <a class="nav-item nav-link" th:href="@{|/complete/${task.id}|}">
+                            <button type="submit" class="btn btn-primary">Вернуть в новые задачи</button>
+                        </a>
+                    </span>
                     <a class="nav-item nav-link" th:href="@{/sessions}">
                         <button type="submit" class="btn btn-primary">Редактировать</button>
                     </a>

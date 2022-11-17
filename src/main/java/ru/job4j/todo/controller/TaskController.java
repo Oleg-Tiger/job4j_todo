@@ -59,7 +59,8 @@ public class TaskController {
     @GetMapping("/complete/{taskId}")
     public String taskComplete(Model model, @PathVariable("taskId") int id) {
         Task task = service.findById(id).get();
-        task.setDone(true);
+        boolean done = task.isDone();
+        task.setDone(!done);
         service.updateDone(task);
         model.addAttribute("task", task);
         return "taskDescription";
