@@ -63,19 +63,19 @@
                 <div class="navbar-nav">
                     <span th:if="${!task.done}">
                         <a class="nav-item nav-link" th:href="@{|/complete/${task.id}|}">
-                            <button type="submit" class="btn btn-primary">Выполнено</button>
+                            <button type="submit" class="btn btn-outline-success">Выполнено</button>
                         </a>
                     </span>
                     <span th:if="${task.done}">
                         <a class="nav-item nav-link" th:href="@{|/complete/${task.id}|}">
-                            <button type="submit" class="btn btn-primary">Вернуть в новые задачи</button>
+                            <button type="submit" class="btn btn-outline-success">Вернуть в новые задачи</button>
                         </a>
                     </span>
-                    <a class="nav-item nav-link" th:href="@{/sessions}">
-                        <button type="submit" class="btn btn-primary">Редактировать</button>
+                    <a class="nav-item nav-link" th:href="@{|/formUpdateTask/${task.id}|}">
+                        <button type="submit" class="btn btn-outline-warning">Редактировать</button>
                     </a>
                     <a class="nav-item nav-link" th:href="@{|/delete/${task.id}|}">
-                        <button type="submit" class="btn btn-primary">Удалить</button>
+                        <button type="submit" class="btn btn-outline-danger">Удалить</button>
                     </a>
             </div>
         </nav>

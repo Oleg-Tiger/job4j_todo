@@ -91,4 +91,25 @@ public class TaskRepository implements TaskStore {
         }
         return result != 0;
     }
+
+    @Override
+    public boolean update(Task task) {
+        Session session = sf.openSession();
+        int result = 0;
+        try {
+            session.beginTransaction();
+            result = session.createQuery(
+                            "UPDATE Task SET name = :fName, description = :fDescription WHERE id = :fId")
+                    .setParameter("fName", task.getName())
+                    .setParameter("fDescription", task.getDescription())
+                    .setParameter("fId", task.getId())
+                    .executeUpdate();
+            session.getTransaction().commit();
+        } catch (Exception e) {
+            session.getTransaction().rollback();
+        } finally {
+            session.close();
+        }
+        return result != 0;
+    }
 }

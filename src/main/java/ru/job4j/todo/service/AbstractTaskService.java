@@ -18,4 +18,6 @@ public interface AbstractTaskService {
     void updateDone(Task task);
 
     boolean delete(Integer id);
+
+    boolean update(Task task);
 }

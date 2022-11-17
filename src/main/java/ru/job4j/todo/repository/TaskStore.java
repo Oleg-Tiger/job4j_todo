@@ -17,4 +17,6 @@ public interface TaskStore {
     void updateDone(Task task);
 
     boolean delete(Integer id);
+
+    boolean update(Task task);
 }

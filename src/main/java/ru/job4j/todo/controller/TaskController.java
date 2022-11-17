@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import ru.job4j.todo.model.Task;
 import ru.job4j.todo.service.AbstractTaskService;
-import ru.job4j.todo.service.TaskService;
 
 @Controller
 public class TaskController {
@@ -71,6 +70,18 @@ public class TaskController {
         service.delete(id);
         model.addAttribute("tasks", service.findAll());
         return "allTasks";
+    }
+
+    @GetMapping("/formUpdateTask/{taskId}")
+    public String formUpdateTask(Model model, @PathVariable("taskId") int id) {
+        model.addAttribute("task", service.findById(id));
+        return "updateTask";
+    }
+
+    @PostMapping("/updateTask")
+    public String updateTask(@ModelAttribute Task task) {
+        service.update(task);
+        return "redirect:/allTasks";
     }
 
 }
