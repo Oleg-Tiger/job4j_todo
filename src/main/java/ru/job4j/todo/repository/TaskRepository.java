@@ -72,4 +72,23 @@ public class TaskRepository implements TaskStore {
         session.getTransaction().commit();
         session.close();
     }
+
+    @Override
+    public boolean delete(Integer id) {
+        Session session = sf.openSession();
+        int result = 0;
+        try {
+            session.beginTransaction();
+            result = session.createQuery(
+                            "DELETE Task WHERE id = :fId")
+                    .setParameter("fId", id)
+                    .executeUpdate();
+            session.getTransaction().commit();
+        } catch (Exception e) {
+            session.getTransaction().rollback();
+        } finally {
+            session.close();
+        }
+        return result != 0;
+    }
 }

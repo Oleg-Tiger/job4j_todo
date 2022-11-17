@@ -65,4 +65,11 @@ public class TaskController {
         return "taskDescription";
     }
 
+    @GetMapping("/delete/{taskId}")
+    public String taskDelete(Model model, @PathVariable("taskId") int id) {
+        service.delete(id);
+        model.addAttribute("tasks", service.findAll());
+        return "allTasks";
+    }
+
 }

@@ -40,4 +40,11 @@ public class TaskService implements AbstractTaskService {
     public void updateDone(Task task) {
         store.updateDone(task);
     }
+
+    @Override
+    public boolean delete(Integer id) {
+        return store.delete(id);
+    }
+
+
 }

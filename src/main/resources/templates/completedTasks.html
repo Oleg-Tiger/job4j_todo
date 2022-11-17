@@ -40,7 +40,6 @@
         <table class="table">
             <thead>
             <tr>
-                <th scope="col">#</th>
                 <th scope="col">Наименование</th>
                 <th scope="col">Дата создания</th>
                 <th scope="col">Состояние</th>
@@ -48,7 +47,6 @@
             </thead>
             <tbody>
             <tr th:each="task: ${completedTasks}">
-                <td th:text="${task.id}"></td>
                 <td>
                     <p>
                         <a class="text-dark" th:href="@{|/taskDescription/${task.id}|}">

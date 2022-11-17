@@ -15,4 +15,6 @@ public interface TaskStore {
     Optional<Task> findById(Integer id);
 
     void updateDone(Task task);
+
+    boolean delete(Integer id);
 }
