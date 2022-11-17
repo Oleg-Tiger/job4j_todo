@@ -50,6 +50,4 @@ public class TaskService implements AbstractTaskService {
     public boolean update(Task task) {
         return store.update(task);
     }
-
-
 }
