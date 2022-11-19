@@ -2,86 +2,96 @@ package ru.job4j.todo.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 import ru.job4j.todo.model.Task;
-import ru.job4j.todo.service.AbstractTaskService;
+import ru.job4j.todo.service.TaskService;
+import ru.job4j.todo.validation.ValidateTask;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.Optional;
+
+@RequestMapping("/tasks")
 @Controller
 public class TaskController {
 
-    private final AbstractTaskService service;
+    private final TaskService service;
 
-    public TaskController(AbstractTaskService service) {
+    public TaskController(TaskService service) {
         this.service = service;
     }
 
-    @GetMapping("/allTasks")
-    public String allTasks(Model model) {
+    @GetMapping("/")
+    public String all(Model model) {
         model.addAttribute("tasks", service.findAll());
-        return "allTasks";
+        return "task/all";
     }
 
-    @GetMapping("/formAddTask")
-    public String addTask(Model model) {
+    @GetMapping("/add")
+    public String add(Model model) {
         model.addAttribute("task", new Task(0, "Заполните поле", "Заполните поле"));
-        return "addTask";
+        return "task/add";
     }
 
-    @PostMapping("/createTask")
-    public String createTask(@ModelAttribute Task task) {
-        service.add(task);
-        return "redirect:/allTasks";
+    @PostMapping("/create")
+    public String create(@ModelAttribute Task task, HttpServletResponse response) throws IOException {
+        Optional<Task> result = service.add(task);
+        ValidateTask.checkOptional(result, response);
+        return "redirect:/tasks/";
     }
 
-    @GetMapping("/completedTasks")
-    public String completedTasks(Model model) {
+    @GetMapping("/completed")
+    public String completed(Model model) {
         model.addAttribute("completedTasks", service.findFilter(true));
-        return "completedTasks";
+        return "task/completed";
     }
 
-    @GetMapping("/newTasks")
-    public String newTasks(Model model) {
+    @GetMapping("/new")
+    public String taskNew(Model model) {
         model.addAttribute("newTasks", service.findFilter(false));
-        return "newTasks";
+        return "task/new";
     }
 
-    @GetMapping("/taskDescription/{taskId}")
-    public String taskDescription(Model model, @PathVariable("taskId") int id) {
-        Task task = service.findById(id).get();
+    @GetMapping("/description/{id}")
+    public String description(Model model, @PathVariable("id") int id, HttpServletResponse response) throws IOException {
+        Optional<Task> result = service.findById(id);
+        ValidateTask.checkOptional(result, response);
+        Task task = result.get();
         model.addAttribute("task", task);
-        return "taskDescription";
+        return "task/description";
     }
 
-    @GetMapping("/complete/{taskId}")
-    public String taskComplete(Model model, @PathVariable("taskId") int id) {
-        Task task = service.findById(id).get();
+    @GetMapping("/complete/{id}")
+    public String complete(Model model, @PathVariable("id") int id, HttpServletResponse response) throws IOException {
+        Optional<Task> result = service.findById(id);
+        ValidateTask.checkOptional(result, response);
+        Task task = result.get();
         boolean done = task.isDone();
         task.setDone(!done);
-        service.updateDone(task);
+        ValidateTask.updateDeleteComplete(response, service.updateDone(task));
         model.addAttribute("task", task);
-        return "taskDescription";
+        return "task/description";
     }
 
-    @GetMapping("/delete/{taskId}")
-    public String taskDelete(Model model, @PathVariable("taskId") int id) {
-        service.delete(id);
+    @GetMapping("/delete/{id}")
+    public String delete(Model model, @PathVariable("id") int id, HttpServletResponse response) throws IOException {
+        ValidateTask.updateDeleteComplete(response, service.delete(id));
         model.addAttribute("tasks", service.findAll());
-        return "allTasks";
+        return "task/all";
     }
 
-    @GetMapping("/formUpdateTask/{taskId}")
-    public String formUpdateTask(Model model, @PathVariable("taskId") int id) {
-        model.addAttribute("task", service.findById(id));
-        return "updateTask";
+    @GetMapping("/update/{id}")
+    public String formUpdate(Model model, @PathVariable("id") int id, HttpServletResponse response) throws IOException {
+        Optional<Task> result = service.findById(id);
+        ValidateTask.checkOptional(result, response);
+        model.addAttribute("task", result.get());
+        return "task/update";
     }
 
-    @PostMapping("/updateTask")
-    public String updateTask(@ModelAttribute Task task) {
-        service.update(task);
-        return "redirect:/allTasks";
+    @PostMapping("/update")
+    public String taskUpdate(@ModelAttribute Task task, HttpServletResponse response) throws IOException {
+        ValidateTask.updateDeleteComplete(response, service.update(task));
+        return "redirect:/tasks/";
     }
 
 }

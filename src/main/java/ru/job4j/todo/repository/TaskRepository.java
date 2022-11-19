@@ -1,115 +1,22 @@
 package ru.job4j.todo.repository;
 
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.query.Query;
-import org.springframework.stereotype.Repository;
 import ru.job4j.todo.model.Task;
 import java.util.List;
 import java.util.Optional;
 
-@Repository
-public class TaskRepository implements TaskStore {
+public interface TaskRepository {
 
-    private final SessionFactory sf;
+    List<Task> findAll();
 
-    public TaskRepository(SessionFactory sf) {
-        this.sf = sf;
-    }
+    Optional<Task> add(Task task);
 
-    @Override
-    public List<Task> findAll() {
-        Session session = sf.openSession();
-        session.beginTransaction();
-        List<Task> result = session.createQuery("from ru.job4j.todo.model.Task", Task.class).list();
-        session.getTransaction().commit();
-        session.close();
-        return result;
-    }
+    List<Task> findFilter(boolean done);
 
-    @Override
-    public Task add(Task task) {
-        Session session = sf.openSession();
-        try {
-            session.beginTransaction();
-            session.save(task);
-            session.getTransaction().commit();
-        } catch (Exception e) {
-            session.getTransaction().rollback();
-        } finally {
-            session.close();
-        }
-        return task;
-    }
+    Optional<Task> findById(Integer id);
 
-    @Override
-    public  List<Task> findFilter(boolean done) {
-        Session session = sf.openSession();
-        Query<Task> query = session.createQuery(
-                "from Task as t where t.done = :fDone", Task.class);
-        query.setParameter("fDone", done);
-        List<Task> result = query.getResultList();
-        session.close();
-        return result;
-    }
+    boolean updateDone(Task task);
 
-    @Override
-    public Optional<Task> findById(Integer id) {
-        Session session = sf.openSession();
-        Query<Task> query = session.createQuery(
-                "from Task as t where t.id = :fId", Task.class);
-        query.setParameter("fId", id);
-        Optional<Task> result = query.uniqueResultOptional();
-        session.close();
-        return result;
-    }
+    boolean delete(Integer id);
 
-    @Override
-    public void updateDone(Task task) {
-        Session session = sf.openSession();
-        session.beginTransaction();
-        session.update(task);
-        session.getTransaction().commit();
-        session.close();
-    }
-
-    @Override
-    public boolean delete(Integer id) {
-        Session session = sf.openSession();
-        int result = 0;
-        try {
-            session.beginTransaction();
-            result = session.createQuery(
-                            "DELETE Task WHERE id = :fId")
-                    .setParameter("fId", id)
-                    .executeUpdate();
-            session.getTransaction().commit();
-        } catch (Exception e) {
-            session.getTransaction().rollback();
-        } finally {
-            session.close();
-        }
-        return result != 0;
-    }
-
-    @Override
-    public boolean update(Task task) {
-        Session session = sf.openSession();
-        int result = 0;
-        try {
-            session.beginTransaction();
-            result = session.createQuery(
-                            "UPDATE Task SET name = :fName, description = :fDescription WHERE id = :fId")
-                    .setParameter("fName", task.getName())
-                    .setParameter("fDescription", task.getDescription())
-                    .setParameter("fId", task.getId())
-                    .executeUpdate();
-            session.getTransaction().commit();
-        } catch (Exception e) {
-            session.getTransaction().rollback();
-        } finally {
-            session.close();
-        }
-        return result != 0;
-    }
+    boolean update(Task task);
 }

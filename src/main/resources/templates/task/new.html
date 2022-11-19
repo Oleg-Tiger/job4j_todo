@@ -29,10 +29,10 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
             <div class="navbar-nav">
-                <a class="nav-item nav-link active" href="#">Все задачи <span class="sr-only">(current)</span></a>
-                <a class="nav-item nav-link" th:href="@{/completedTasks}">Выполненные задачи</a>
-                <a class="nav-item nav-link" th:href="@{/newTasks}">Новые задачи</a>
-                <a class="nav-item nav-link" th:href="@{/formAddTask}">Добавить задачу</a>
+                <a class="nav-item nav-link" th:href="@{/tasks/}">Все задачи</a>
+                <a class="nav-item nav-link" th:href="@{/tasks/completed}">Выполненные задачи</a>
+                <a class="nav-item nav-link active" href="#">Новые задачи <span class="sr-only">(current)</span></a>
+                <a class="nav-item nav-link" th:href="@{/tasks/add}">Добавить задачу</a>
             </div>
         </div>
     </nav>
@@ -46,10 +46,10 @@
             </tr>
             </thead>
             <tbody>
-            <tr th:each="task: ${tasks}">
+            <tr th:each="task: ${newTasks}">
                 <td>
                     <p>
-                        <a class="text-dark" th:href="@{|/taskDescription/${task.id}|}">
+                        <a class="text-dark" th:href="@{|/tasks/description/${task.id}|}">
                             <span th:text="${task.name}"></span>
                         </a>
                     </p>
@@ -58,12 +58,7 @@
                     <span th:text="${task.created.toLocalDate}"></span>
                 </td>
                 <td>
-                    <span th:if="${task.done}">
-                            <div class="p-3 mb-2 bg-success text-dark">Выполнена</div>
-                    </span>
-                    <span th:if="${!task.done}">
-                           <div class="p-3 mb-2 bg-warning text-dark">Ожидает выполнения</div>
-                    </span>
+                    <div class="p-3 mb-2 bg-warning text-dark">Ожидает выполнения</div>
                 </td>
             </tr>
             </tbody>

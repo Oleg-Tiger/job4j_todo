@@ -1,6 +1,7 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
+    <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
@@ -13,8 +14,8 @@
             integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
             integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <title>TODO</title>
+
+    <title>TODO </title>
 </head>
 <body>
 <div class="container">
@@ -29,40 +30,35 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
             <div class="navbar-nav">
-                <a class="nav-item nav-link" th:href="@{/allTasks}">Все задачи</a>
-                <a class="nav-item nav-link" th:href="@{/completedTasks}">Выполненные задачи</a>
-                <a class="nav-item nav-link active" href="#">Новые задачи <span class="sr-only">(current)</span></a>
-                <a class="nav-item nav-link" th:href="@{/formAddTask}">Добавить задачу</a>
+                <a class="nav-item nav-link" th:href="@{/tasks/}">Все задачи</a>
+                <a class="nav-item nav-link" th:href="@{/tasks/completed}">Выполненные задачи</a>
+                <a class="nav-item nav-link" th:href="@{/tasks/new}">Новые задачи</a>
+                <a class="nav-item nav-link active" href="#">Добавить задачу <span class="sr-only">(current)</span></a>
             </div>
         </div>
     </nav>
     <div class="row">
-        <table class="table">
-            <thead>
-            <tr>
-                <th scope="col">Наименование</th>
-                <th scope="col">Дата создания</th>
-                <th scope="col">Состояние</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:each="task: ${newTasks}">
-                <td>
-                    <p>
-                        <a class="text-dark" th:href="@{|/taskDescription/${task.id}|}">
-                            <span th:text="${task.name}"></span>
-                        </a>
-                    </p>
-                </td>
-                <td>
-                    <span th:text="${task.created.toLocalDate}"></span>
-                </td>
-                <td>
-                    <div class="p-3 mb-2 bg-warning text-dark">Ожидает выполнения</div>
-                </td>
-            </tr>
-            </tbody>
-        </table>
+        <div class="card" style="width: 100%">
+            <div class="card-header">
+                Новая задача
+            </div>
+            <div class="card-body">
+                <form th:action="@{/tasks/create}" method="POST">
+                    <div class="form-group">
+                        <label for="name">Наименование</label>
+                        <input type="text" class="form-control" name="name" id="name">
+                    </div>
+                    <div class="form-group">
+                        <label for="description">Описание
+                            <br>
+                            <textarea rows="15" cols="140" name="description" id="description"></textarea>
+                            <br/>
+                        </label>
+                    </div>
+                    <button type="submit" class="btn btn-outline-success">Сохранить</button>
+                </form>
+            </div>
+        </div>
     </div>
 </div>
 </body>

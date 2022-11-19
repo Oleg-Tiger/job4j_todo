@@ -33,7 +33,7 @@ job4j_todo
 - Запустить приложение с помощью собранного jar-файла, выполнив команду
   ```java -jar target/job4j_todo-1.0.jar```
 - Перейти по ссылке
-  ```http://localhost:8080/allTasks```
+  ```http://localhost:8080/tasks/```
 
 ## Страницы проекта:
 

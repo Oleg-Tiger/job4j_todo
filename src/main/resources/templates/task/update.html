@@ -30,10 +30,10 @@
     </button>
     <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
       <div class="navbar-nav">
-        <a class="nav-item nav-link" th:href="@{/allTasks}">Все задачи</a>
-        <a class="nav-item nav-link" th:href="@{/completedTasks}">Выполненные задачи</a>
-        <a class="nav-item nav-link" th:href="@{/newTasks}">Новые задачи</a>
-        <a class="nav-item nav-link" th:href="@{/addTask}">Добавить задачу </a>
+        <a class="nav-item nav-link" th:href="@{/tasks/}">Все задачи</a>
+        <a class="nav-item nav-link" th:href="@{/tasks/completed}">Выполненные задачи</a>
+        <a class="nav-item nav-link" th:href="@{/tasks/new}">Новые задачи</a>
+        <a class="nav-item nav-link" th:href="@{/tasks/add}">Добавить задачу </a>
       </div>
     </div>
   </nav>
@@ -43,7 +43,7 @@
         Редактирование задачи
       </div>
       <div class="card-body">
-        <form th:action="@{/updateTask}" method="POST" th:object="${task}">
+        <form th:action="@{/tasks/update}" method="POST" th:object="${task}">
           <input type="hidden" name="id" th:field="*{id}"/>
           <div class="form-group">
             <label for="name">Наименование</label>
