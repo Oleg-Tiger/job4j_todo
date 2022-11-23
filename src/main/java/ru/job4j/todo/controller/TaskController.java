@@ -4,10 +4,13 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import ru.job4j.todo.model.Task;
+import ru.job4j.todo.model.User;
 import ru.job4j.todo.service.TaskService;
+import ru.job4j.todo.util.UserUtil;
 import ru.job4j.todo.validation.ValidateTask;
 
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.Optional;
 
@@ -22,13 +25,17 @@ public class TaskController {
     }
 
     @GetMapping("/")
-    public String all(Model model) {
+    public String all(Model model, HttpSession httpSession) {
+        User user = UserUtil.getUserFromSession(httpSession);
+        model.addAttribute("user", user);
         model.addAttribute("tasks", service.findAll());
         return "task/all";
     }
 
     @GetMapping("/add")
-    public String add(Model model) {
+    public String add(Model model, HttpSession httpSession) {
+        User user = UserUtil.getUserFromSession(httpSession);
+        model.addAttribute("user", user);
         model.addAttribute("task", new Task(0, "Заполните поле", "Заполните поле"));
         return "task/add";
     }
@@ -41,19 +48,26 @@ public class TaskController {
     }
 
     @GetMapping("/completed")
-    public String completed(Model model) {
+    public String completed(Model model, HttpSession httpSession) {
+        User user = UserUtil.getUserFromSession(httpSession);
+        model.addAttribute("user", user);
         model.addAttribute("completedTasks", service.findFilter(true));
         return "task/completed";
     }
 
     @GetMapping("/new")
-    public String taskNew(Model model) {
+    public String taskNew(Model model, HttpSession httpSession) {
+        User user = UserUtil.getUserFromSession(httpSession);
+        model.addAttribute("user", user);
         model.addAttribute("newTasks", service.findFilter(false));
         return "task/new";
     }
 
     @GetMapping("/description/{id}")
-    public String description(Model model, @PathVariable("id") int id, HttpServletResponse response) throws IOException {
+    public String description(Model model, @PathVariable("id") int id,
+                              HttpServletResponse response, HttpSession httpSession) throws IOException {
+        User user = UserUtil.getUserFromSession(httpSession);
+        model.addAttribute("user", user);
         Optional<Task> result = service.findById(id);
         ValidateTask.checkOptional(result, response);
         Task task = result.get();
@@ -62,7 +76,10 @@ public class TaskController {
     }
 
     @GetMapping("/complete/{id}")
-    public String complete(Model model, @PathVariable("id") int id, HttpServletResponse response) throws IOException {
+    public String complete(Model model, @PathVariable("id") int id,
+                           HttpServletResponse response, HttpSession httpSession) throws IOException {
+        User user = UserUtil.getUserFromSession(httpSession);
+        model.addAttribute("user", user);
         Optional<Task> result = service.findById(id);
         ValidateTask.checkOptional(result, response);
         Task task = result.get();
@@ -74,14 +91,20 @@ public class TaskController {
     }
 
     @GetMapping("/delete/{id}")
-    public String delete(Model model, @PathVariable("id") int id, HttpServletResponse response) throws IOException {
+    public String delete(Model model, @PathVariable("id") int id,
+                         HttpServletResponse response, HttpSession httpSession) throws IOException {
+        User user = UserUtil.getUserFromSession(httpSession);
+        model.addAttribute("user", user);
         ValidateTask.updateDeleteComplete(response, service.delete(id));
         model.addAttribute("tasks", service.findAll());
         return "task/all";
     }
 
     @GetMapping("/update/{id}")
-    public String formUpdate(Model model, @PathVariable("id") int id, HttpServletResponse response) throws IOException {
+    public String formUpdate(Model model, @PathVariable("id") int id,
+                             HttpServletResponse response, HttpSession httpSession) throws IOException {
+        User user = UserUtil.getUserFromSession(httpSession);
+        model.addAttribute("user", user);
         Optional<Task> result = service.findById(id);
         ValidateTask.checkOptional(result, response);
         model.addAttribute("task", result.get());

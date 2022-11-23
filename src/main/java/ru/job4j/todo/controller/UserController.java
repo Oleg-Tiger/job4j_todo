@@ -8,6 +8,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import ru.job4j.todo.model.User;
 import ru.job4j.todo.service.UserService;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.util.Optional;
 
 @Controller
@@ -23,7 +26,7 @@ public class UserController {
     public String registration(Model model, @ModelAttribute User user) {
         Optional<User> regUser = service.add(user);
         if (regUser.isEmpty()) {
-            model.addAttribute("message", "Данная почта уже используется");
+            model.addAttribute("message", "Данная электронная почта уже используется");
             return "redirect:/registrationPage?fail=true";
         }
         return "redirect:/loginPage";
@@ -42,14 +45,22 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public String login(@ModelAttribute User user) {
+    public String login(@ModelAttribute User user, HttpServletRequest request) {
         Optional<User> userDb = service.findUserByEmailAndPassword(
                 user.getEmail(), user.getPassword()
         );
         if (userDb.isEmpty()) {
             return "redirect:/loginPage?fail=true";
         }
+        HttpSession session = request.getSession();
+        session.setAttribute("user", userDb.get());
         return "redirect:/tasks/";
+    }
+
+    @GetMapping("/logout")
+    public String logout(HttpSession session) {
+        session.invalidate();
+        return "redirect:/loginPage";
     }
 }
 
