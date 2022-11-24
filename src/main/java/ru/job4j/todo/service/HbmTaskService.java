@@ -37,8 +37,13 @@ public class HbmTaskService implements TaskService {
     }
 
     @Override
-    public boolean updateDone(Task task) {
-        return store.updateDone(task);
+    public boolean updateDone(Integer id) {
+        return store.updateDone(id);
+    }
+
+    @Override
+    public boolean updateNotDone(Integer id) {
+        return store.updateNotDone(id);
     }
 
     @Override

@@ -80,14 +80,19 @@ public class TaskController {
                            HttpServletResponse response, HttpSession httpSession) throws IOException {
         User user = UserUtil.getUserFromSession(httpSession);
         model.addAttribute("user", user);
-        Optional<Task> result = service.findById(id);
-        ValidateTask.checkOptional(result, response);
-        Task task = result.get();
-        boolean done = task.isDone();
-        task.setDone(!done);
-        ValidateTask.updateDeleteComplete(response, service.updateDone(task));
-        model.addAttribute("task", task);
-        return "task/description";
+        ValidateTask.updateDeleteComplete(service.updateDone(id), response);
+        model.addAttribute("tasks", service.findAll());
+        return "task/all";
+    }
+
+    @GetMapping("/notComplete/{id}")
+    public String notComplete(Model model, @PathVariable("id") int id,
+                           HttpServletResponse response, HttpSession httpSession) throws IOException {
+        User user = UserUtil.getUserFromSession(httpSession);
+        model.addAttribute("user", user);
+        ValidateTask.updateDeleteComplete(service.updateNotDone(id), response);
+        model.addAttribute("tasks", service.findAll());
+        return "task/all";
     }
 
     @GetMapping("/delete/{id}")
@@ -95,7 +100,7 @@ public class TaskController {
                          HttpServletResponse response, HttpSession httpSession) throws IOException {
         User user = UserUtil.getUserFromSession(httpSession);
         model.addAttribute("user", user);
-        ValidateTask.updateDeleteComplete(response, service.delete(id));
+        ValidateTask.updateDeleteComplete(service.delete(id), response);
         model.addAttribute("tasks", service.findAll());
         return "task/all";
     }
@@ -113,7 +118,7 @@ public class TaskController {
 
     @PostMapping("/update")
     public String taskUpdate(@ModelAttribute Task task, HttpServletResponse response) throws IOException {
-        ValidateTask.updateDeleteComplete(response, service.update(task));
+        ValidateTask.updateDeleteComplete(service.update(task), response);
         return "redirect:/tasks/";
     }
 

@@ -75,7 +75,7 @@
                         </a>
                     </span>
                     <span th:if="${task.done}">
-                        <a class="nav-item nav-link" th:href="@{|/tasks/complete/${task.id}|}">
+                        <a class="nav-item nav-link" th:href="@{|/tasks/notComplete/${task.id}|}">
                             <button type="submit" class="btn btn-outline-success">Вернуть в новые задачи</button>
                         </a>
                     </span>

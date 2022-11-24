@@ -22,16 +22,18 @@ public class AuthFilter implements Filter {
         HttpServletRequest req = (HttpServletRequest) request;
         HttpServletResponse res = (HttpServletResponse) response;
         String uri = req.getRequestURI();
-        for (String page : PAGES) {
-            if (uri.endsWith(page)) {
+            if (check(uri)) {
                 chain.doFilter(req, res);
                 return;
-            }
         }
         if (req.getSession().getAttribute("user") == null) {
             res.sendRedirect(req.getContextPath() + "/loginPage");
             return;
         }
         chain.doFilter(req, res);
+    }
+
+    private boolean check(String uri) {
+        return PAGES.stream().anyMatch(page -> uri.endsWith(page));
     }
 }

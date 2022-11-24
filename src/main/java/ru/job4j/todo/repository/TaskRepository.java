@@ -14,7 +14,9 @@ public interface TaskRepository {
 
     Optional<Task> findById(Integer id);
 
-    boolean updateDone(Task task);
+    boolean updateDone(Integer id);
+
+    boolean updateNotDone(Integer id);
 
     boolean delete(Integer id);
 

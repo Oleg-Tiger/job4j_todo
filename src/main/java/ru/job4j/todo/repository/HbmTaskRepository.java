@@ -67,23 +67,13 @@ public class HbmTaskRepository implements TaskRepository {
     }
 
     @Override
-    public boolean updateDone(Task task) {
-        Session session = sf.openSession();
-        int result = 0;
-        try {
-            session.beginTransaction();
-            result = session.createQuery(
-                            "UPDATE Task SET done = :fDone WHERE id = :fId")
-                    .setParameter("fDone", task.isDone())
-                    .setParameter("fId", task.getId())
-                    .executeUpdate();
-            session.getTransaction().commit();
-        } catch (Exception e) {
-            session.getTransaction().rollback();
-        } finally {
-            session.close();
-        }
-        return result != 0;
+    public boolean updateDone(Integer id) {
+        return changeDone(id, true);
+    }
+
+    @Override
+    public boolean updateNotDone(Integer id) {
+        return changeDone(id, false);
     }
 
     @Override
@@ -116,6 +106,25 @@ public class HbmTaskRepository implements TaskRepository {
                     .setParameter("fName", task.getName())
                     .setParameter("fDescription", task.getDescription())
                     .setParameter("fId", task.getId())
+                    .executeUpdate();
+            session.getTransaction().commit();
+        } catch (Exception e) {
+            session.getTransaction().rollback();
+        } finally {
+            session.close();
+        }
+        return result != 0;
+    }
+
+    private boolean changeDone(Integer id, boolean done) {
+        Session session = sf.openSession();
+        int result = 0;
+        try {
+            session.beginTransaction();
+            result = session.createQuery(
+                            "UPDATE Task SET done = :fDone WHERE id = :fId")
+                    .setParameter("fDone", done)
+                    .setParameter("fId", id)
                     .executeUpdate();
             session.getTransaction().commit();
         } catch (Exception e) {

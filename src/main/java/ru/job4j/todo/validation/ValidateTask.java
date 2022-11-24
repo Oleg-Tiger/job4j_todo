@@ -13,7 +13,7 @@ public class ValidateTask {
         }
     }
 
-    public static void updateDeleteComplete(HttpServletResponse response, boolean result) throws IOException {
+    public static void updateDeleteComplete(boolean result, HttpServletResponse response) throws IOException {
         if (!result) {
             response.sendError(HttpServletResponse.SC_NOT_FOUND);
         }
