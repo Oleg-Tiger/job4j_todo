@@ -51,6 +51,7 @@
             <tr>
                 <th scope="col">Наименование</th>
                 <th scope="col">Дата создания</th>
+                <th scope="col">Создал</th>
                 <th scope="col">Состояние</th>
             </tr>
             </thead>
@@ -65,6 +66,9 @@
                 </td>
                 <td>
                     <span th:text="${task.created.toLocalDate}"></span>
+                </td>
+                <td>
+                    <span th:text="${task.user.name}"></span>
                 </td>
                 <td>
                     <span th:if="${task.done}">

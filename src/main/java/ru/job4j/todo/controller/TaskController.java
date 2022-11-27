@@ -41,7 +41,9 @@ public class TaskController {
     }
 
     @PostMapping("/create")
-    public String create(@ModelAttribute Task task, HttpServletResponse response) throws IOException {
+    public String create(@ModelAttribute Task task, HttpServletResponse response,
+                         HttpSession session) throws IOException {
+        task.setUser(UserUtil.getUserFromSession(session));
         Optional<Task> result = service.add(task);
         ValidateTask.checkOptional(result, response);
         return "redirect:/tasks/";

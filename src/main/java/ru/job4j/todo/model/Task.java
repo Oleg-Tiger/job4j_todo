@@ -18,6 +18,10 @@ public class Task {
     private final LocalDateTime created = LocalDateTime.now();
     private boolean done = false;
 
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
+
     public Task(int id, String name, String description) {
         this.id = id;
         this.name = name;
