@@ -3,12 +3,13 @@ package ru.job4j.todo.controller;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import ru.job4j.todo.model.Priority;
 import ru.job4j.todo.model.Task;
 import ru.job4j.todo.model.User;
+import ru.job4j.todo.service.PriorityService;
 import ru.job4j.todo.service.TaskService;
 import ru.job4j.todo.util.UserUtil;
 import ru.job4j.todo.validation.ValidateTask;
-
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
@@ -19,9 +20,11 @@ import java.util.Optional;
 public class TaskController {
 
     private final TaskService service;
+    private final PriorityService priorityService;
 
-    public TaskController(TaskService service) {
+    public TaskController(TaskService service, PriorityService priorityService) {
         this.service = service;
+        this.priorityService = priorityService;
     }
 
     @GetMapping("/")
@@ -35,6 +38,7 @@ public class TaskController {
     @GetMapping("/add")
     public String add(Model model, HttpSession httpSession) {
         User user = UserUtil.getUserFromSession(httpSession);
+        model.addAttribute("priorities", priorityService.findAll());
         model.addAttribute("user", user);
         model.addAttribute("task", new Task(0, "Заполните поле", "Заполните поле"));
         return "task/add";
@@ -43,6 +47,10 @@ public class TaskController {
     @PostMapping("/create")
     public String create(@ModelAttribute Task task, HttpServletResponse response,
                          HttpSession session) throws IOException {
+        int id = task.getPriority().getId();
+        Optional<Priority> priority = priorityService.findById(id);
+        ValidateTask.checkOptional(priority, response);
+        task.setPriority(priority.get());
         task.setUser(UserUtil.getUserFromSession(session));
         Optional<Task> result = service.add(task);
         ValidateTask.checkOptional(result, response);
@@ -112,6 +120,7 @@ public class TaskController {
                              HttpServletResponse response, HttpSession httpSession) throws IOException {
         User user = UserUtil.getUserFromSession(httpSession);
         model.addAttribute("user", user);
+        model.addAttribute("priorities", priorityService.findAll());
         Optional<Task> result = service.findById(id);
         ValidateTask.checkOptional(result, response);
         model.addAttribute("task", result.get());
@@ -120,6 +129,10 @@ public class TaskController {
 
     @PostMapping("/update")
     public String taskUpdate(@ModelAttribute Task task, HttpServletResponse response) throws IOException {
+        int id = task.getPriority().getId();
+        Optional<Priority> priority = priorityService.findById(id);
+        ValidateTask.checkOptional(priority, response);
+        task.setPriority(priority.get());
         ValidateTask.updateDeleteComplete(service.update(task), response);
         return "redirect:/tasks/";
     }

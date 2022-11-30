@@ -21,7 +21,7 @@ public class HbmTaskRepository implements TaskRepository {
     public List<Task> findAll() {
         Session session = sf.openSession();
         session.beginTransaction();
-        List<Task> result = session.createQuery("from Task", Task.class).list();
+        List<Task> result = session.createQuery("from Task as t join fetch t.priority", Task.class).list();
         session.getTransaction().commit();
         session.close();
         return result;
@@ -48,7 +48,7 @@ public class HbmTaskRepository implements TaskRepository {
     public  List<Task> findFilter(boolean done) {
         Session session = sf.openSession();
         Query<Task> query = session.createQuery(
-                "from Task as t where t.done = :fDone", Task.class);
+                "from Task as t join fetch t.priority where t.done = :fDone", Task.class);
         query.setParameter("fDone", done);
         List<Task> result = query.getResultList();
         session.close();
@@ -102,9 +102,10 @@ public class HbmTaskRepository implements TaskRepository {
         try {
             session.beginTransaction();
             result = session.createQuery(
-                            "UPDATE Task SET name = :fName, description = :fDescription WHERE id = :fId")
+                            "UPDATE Task SET name = :fName, description = :fDescription, priority_id = :fPriority WHERE id = :fId")
                     .setParameter("fName", task.getName())
                     .setParameter("fDescription", task.getDescription())
+                    .setParameter("fPriority", task.getPriority().getId())
                     .setParameter("fId", task.getId())
                     .executeUpdate();
             session.getTransaction().commit();

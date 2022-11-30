@@ -52,6 +52,7 @@
                 <th scope="col">Дата создания</th>
                 <th scope="col">Создал</th>
                 <th scope="col">Состояние</th>
+                <th scope="col">Приоритет</th>
             </tr>
             </thead>
             <tbody>
@@ -71,6 +72,9 @@
                 </td>
                 <td>
                     <div class="p-3 mb-2 bg-warning text-dark">Ожидает выполнения</div>
+                </td>
+                <td>
+                    <span th:text="${task.priority.name}"></span>
                 </td>
             </tr>
             </tbody>

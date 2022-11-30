@@ -7,7 +7,7 @@ import java.util.Optional;
 
 public class ValidateTask {
 
-    public static void checkOptional(Optional<Task> result, HttpServletResponse response) throws IOException {
+    public static void checkOptional(Optional<?> result, HttpServletResponse response) throws IOException {
         if (result.isEmpty()) {
             response.sendError(HttpServletResponse.SC_NOT_FOUND);
         }
