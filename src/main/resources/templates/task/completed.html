@@ -51,6 +51,7 @@
                 <th scope="col">Наименование</th>
                 <th scope="col">Дата создания</th>
                 <th scope="col">Создал</th>
+                <th scope="col">Категория</th>
                 <th scope="col">Состояние</th>
                 <th scope="col">Приоритет</th>
             </tr>
@@ -69,6 +70,10 @@
                 </td>
                 <td>
                     <span th:text="${task.user.name}"></span>
+                </td>
+                <td>
+                    <span th:each="category,iterStat : ${task.categories}"
+                          th:text="${category.name} + ${!iterStat.last ? ', ' : ''}"></span>
                 </td>
                 <td>
                     <div class="p-3 mb-2 bg-success text-dark">Выполнена</div>

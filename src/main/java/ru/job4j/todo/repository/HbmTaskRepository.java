@@ -21,7 +21,7 @@ public class HbmTaskRepository implements TaskRepository {
     public List<Task> findAll() {
         Session session = sf.openSession();
         session.beginTransaction();
-        List<Task> result = session.createQuery("from Task as t join fetch t.priority", Task.class).list();
+        List<Task> result = session.createQuery("select distinct t from Task t left join fetch t.categories join fetch t.priority", Task.class).list();
         session.getTransaction().commit();
         session.close();
         return result;
@@ -48,7 +48,7 @@ public class HbmTaskRepository implements TaskRepository {
     public  List<Task> findFilter(boolean done) {
         Session session = sf.openSession();
         Query<Task> query = session.createQuery(
-                "from Task as t join fetch t.priority where t.done = :fDone", Task.class);
+                "select distinct t from Task t left join fetch t.categories join fetch t.priority where t.done = :fDone", Task.class);
         query.setParameter("fDone", done);
         List<Task> result = query.getResultList();
         session.close();
