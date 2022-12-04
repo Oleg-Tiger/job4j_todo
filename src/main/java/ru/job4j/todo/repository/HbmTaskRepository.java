@@ -1,69 +1,49 @@
 package ru.job4j.todo.repository;
 
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.query.Query;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Repository;
 import ru.job4j.todo.model.Task;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
+@AllArgsConstructor
 @Repository
 public class HbmTaskRepository implements TaskRepository {
 
-    private final SessionFactory sf;
-
-    public HbmTaskRepository(SessionFactory sf) {
-        this.sf = sf;
-    }
+    private final CrudRepository crudRepository;
 
     @Override
     public List<Task> findAll() {
-        Session session = sf.openSession();
-        session.beginTransaction();
-        List<Task> result = session.createQuery("select distinct t from Task t left join fetch t.categories join fetch t.priority", Task.class).list();
-        session.getTransaction().commit();
-        session.close();
-        return result;
+        return crudRepository.query(
+                "select distinct t from Task t left join fetch t.categories join fetch t.priority", Task.class
+        );
     }
 
     @Override
     public Optional<Task> add(Task task) {
-        Optional<Task> result = Optional.empty();
-        Session session = sf.openSession();
+        Optional<Task> result;
         try {
-            session.beginTransaction();
-            session.save(task);
-            session.getTransaction().commit();
+            crudRepository.run(session -> session.save(task));
             result = Optional.of(task);
         } catch (Exception e) {
-            session.getTransaction().rollback();
-        } finally {
-            session.close();
+            result = Optional.empty();
         }
         return result;
     }
 
     @Override
     public  List<Task> findFilter(boolean done) {
-        Session session = sf.openSession();
-        Query<Task> query = session.createQuery(
-                "select distinct t from Task t left join fetch t.categories join fetch t.priority where t.done = :fDone", Task.class);
-        query.setParameter("fDone", done);
-        List<Task> result = query.getResultList();
-        session.close();
-        return result;
+        return crudRepository.query(
+                "select distinct t from Task t left join fetch t.categories join fetch t.priority where t.done = :fDone",
+                Task.class, Map.of("fDone", done)
+        );
     }
 
     @Override
     public Optional<Task> findById(Integer id) {
-        Session session = sf.openSession();
-        Query<Task> query = session.createQuery(
-                "from Task as t where t.id = :fId", Task.class);
-        query.setParameter("fId", id);
-        Optional<Task> result = query.uniqueResultOptional();
-        session.close();
-        return result;
+        return crudRepository.optional("from Task as t where t.id = :fId", Task.class,
+                Map.of("fId", id));
     }
 
     @Override
@@ -78,61 +58,38 @@ public class HbmTaskRepository implements TaskRepository {
 
     @Override
     public boolean delete(Integer id) {
-        Session session = sf.openSession();
-        int result = 0;
+        boolean result = true;
         try {
-            session.beginTransaction();
-            result = session.createQuery(
-                            "DELETE Task WHERE id = :fId")
-                    .setParameter("fId", id)
-                    .executeUpdate();
-            session.getTransaction().commit();
+            crudRepository.run("DELETE Task WHERE id = :fId", Map.of("fId", id));
         } catch (Exception e) {
-            session.getTransaction().rollback();
-        } finally {
-            session.close();
+            result = false;
         }
-        return result != 0;
+        return result;
     }
 
     @Override
     public boolean update(Task task) {
-        Session session = sf.openSession();
-        int result = 0;
+        boolean result = true;
         try {
-            session.beginTransaction();
-            result = session.createQuery(
-                            "UPDATE Task SET name = :fName, description = :fDescription, priority_id = :fPriority WHERE id = :fId")
-                    .setParameter("fName", task.getName())
-                    .setParameter("fDescription", task.getDescription())
-                    .setParameter("fPriority", task.getPriority().getId())
-                    .setParameter("fId", task.getId())
-                    .executeUpdate();
-            session.getTransaction().commit();
+            crudRepository.run(
+                    "UPDATE Task SET name = :fName, description = :fDescription, priority_id = :fPriority WHERE id = :fId",
+                    Map.of("fName", task.getName(), "fDescription", task.getDescription(),
+                            "fPriority", task.getPriority().getId(), "fId", task.getId())
+            );
         } catch (Exception e) {
-            session.getTransaction().rollback();
-        } finally {
-            session.close();
+            result = false;
         }
-        return result != 0;
+        return result;
     }
 
     private boolean changeDone(Integer id, boolean done) {
-        Session session = sf.openSession();
-        int result = 0;
+        boolean result = true;
         try {
-            session.beginTransaction();
-            result = session.createQuery(
-                            "UPDATE Task SET done = :fDone WHERE id = :fId")
-                    .setParameter("fDone", done)
-                    .setParameter("fId", id)
-                    .executeUpdate();
-            session.getTransaction().commit();
+            crudRepository.run("UPDATE Task SET done = :fDone WHERE id = :fId",
+                    Map.of("fDone", done, "fId", id));
         } catch (Exception e) {
-            session.getTransaction().rollback();
-        } finally {
-            session.close();
+            result = false;
         }
-        return result != 0;
+        return result;
     }
 }
