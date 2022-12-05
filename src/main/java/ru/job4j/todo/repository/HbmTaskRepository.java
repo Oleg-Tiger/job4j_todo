@@ -21,13 +21,12 @@ public class HbmTaskRepository implements TaskRepository {
     }
 
     @Override
-    public Optional<Task> add(Task task) {
-        Optional<Task> result;
+    public boolean add(Task task) {
+        boolean result = true;
         try {
             crudRepository.run(session -> session.save(task));
-            result = Optional.of(task);
         } catch (Exception e) {
-            result = Optional.empty();
+            result = false;
         }
         return result;
     }
@@ -71,11 +70,7 @@ public class HbmTaskRepository implements TaskRepository {
     public boolean update(Task task) {
         boolean result = true;
         try {
-            crudRepository.run(
-                    "UPDATE Task SET name = :fName, description = :fDescription, priority_id = :fPriority WHERE id = :fId",
-                    Map.of("fName", task.getName(), "fDescription", task.getDescription(),
-                            "fPriority", task.getPriority().getId(), "fId", task.getId())
-            );
+            crudRepository.run(session -> session.merge(task));
         } catch (Exception e) {
             result = false;
         }

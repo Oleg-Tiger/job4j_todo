@@ -2,6 +2,7 @@ package ru.job4j.todo.service;
 
 import org.springframework.stereotype.Service;
 import ru.job4j.todo.model.Priority;
+import ru.job4j.todo.model.Task;
 import ru.job4j.todo.repository.PriorityRepository;
 import java.util.List;
 import java.util.Optional;
@@ -19,7 +20,13 @@ public class HbmPriorityService implements PriorityService {
         return repository.findAll();
     }
 
-    public Optional<Priority> findById(int id) {
-        return repository.findById(id);
+    public boolean findById(Task task) {
+        int id = task.getPriority().getId();
+        Optional<Priority> priority = repository.findById(id);
+        if (priority.isEmpty()) {
+            return false;
+        }
+        task.setPriority(priority.get());
+        return true;
     }
 }

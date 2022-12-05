@@ -3,7 +3,6 @@ package ru.job4j.todo.service;
 import org.springframework.stereotype.Service;
 import ru.job4j.todo.model.Task;
 import ru.job4j.todo.repository.TaskRepository;
-
 import java.util.List;
 import java.util.Optional;
 
@@ -22,7 +21,7 @@ public class HbmTaskService implements TaskService {
     }
 
     @Override
-    public Optional<Task> add(Task task) {
+    public boolean add(Task task) {
         return store.add(task);
     }
 
@@ -52,7 +51,10 @@ public class HbmTaskService implements TaskService {
     }
 
     @Override
-    public boolean update(Task task) {
+    public boolean update(Task task, Task inDb) {
+        task.setCreated(inDb.getCreated());
+        task.setDone(inDb.isDone());
+        task.setUser(inDb.getUser());
         return store.update(task);
     }
 }

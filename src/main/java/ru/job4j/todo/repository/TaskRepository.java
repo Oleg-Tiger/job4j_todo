@@ -8,7 +8,7 @@ public interface TaskRepository {
 
     List<Task> findAll();
 
-    Optional<Task> add(Task task);
+   boolean add(Task task);
 
     List<Task> findFilter(boolean done);
 

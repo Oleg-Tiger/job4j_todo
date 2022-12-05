@@ -1,7 +1,6 @@
 package ru.job4j.todo.service;
 
 import ru.job4j.todo.model.Task;
-
 import java.util.List;
 import java.util.Optional;
 
@@ -9,7 +8,7 @@ public interface TaskService {
 
     List<Task> findAll();
 
-    Optional<Task> add(Task task);
+    boolean add(Task task);
 
     List<Task> findFilter(boolean done);
 
@@ -21,5 +20,5 @@ public interface TaskService {
 
     boolean delete(Integer id);
 
-    boolean update(Task task);
+    boolean update(Task task, Task inDb);
 }

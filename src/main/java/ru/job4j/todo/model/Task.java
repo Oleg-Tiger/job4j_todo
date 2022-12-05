@@ -17,7 +17,7 @@ public class Task {
     private int id;
     private String name;
     private String description;
-    private final LocalDateTime created = LocalDateTime.now();
+    private LocalDateTime created = LocalDateTime.now();
     private boolean done = false;
 
     @ManyToOne
