@@ -2,7 +2,9 @@ package ru.job4j.todo.service;
 
 import org.springframework.stereotype.Service;
 import ru.job4j.todo.model.Task;
+import ru.job4j.todo.model.User;
 import ru.job4j.todo.repository.TaskRepository;
+import java.time.*;
 import java.util.List;
 import java.util.Optional;
 
@@ -16,8 +18,8 @@ public class HbmTaskService implements TaskService {
     }
 
     @Override
-    public List<Task> findAll() {
-        return store.findAll();
+    public List<Task> findAll(User user) {
+        return convertCreatedWithZone(store.findAll(), user.getUserZone());
     }
 
     @Override
@@ -26,8 +28,8 @@ public class HbmTaskService implements TaskService {
     }
 
     @Override
-    public  List<Task> findFilter(boolean done) {
-        return store.findFilter(done);
+    public  List<Task> findFilter(boolean done, User user) {
+        return convertCreatedWithZone(store.findFilter(done), user.getUserZone());
     }
 
     @Override
@@ -56,5 +58,15 @@ public class HbmTaskService implements TaskService {
         task.setDone(inDb.isDone());
         task.setUser(inDb.getUser());
         return store.update(task);
+    }
+
+    private List<Task> convertCreatedWithZone(List<Task> withoutZone, String zoneId) {
+        for (Task task : withoutZone) {
+            LocalDateTime created = task.getCreated();
+            ZonedDateTime zonedForDefault = created.atZone(ZoneId.systemDefault());
+            ZonedDateTime zonedForUser = zonedForDefault.withZoneSameInstant(ZoneId.of(zoneId));
+            task.setCreated(zonedForUser.toLocalDateTime());
+        }
+        return withoutZone;
     }
 }

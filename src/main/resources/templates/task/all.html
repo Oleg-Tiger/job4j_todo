@@ -67,7 +67,7 @@
                     </p>
                 </td>
                 <td>
-                    <span th:text="${task.created.toLocalDate}"></span>
+                    <span th:text="${#temporals.format(task.created, 'dd-MM-yyyy HH:mm')}"></span>
                 </td>
                 <td>
                     <span th:text="${task.user.name}"></span>

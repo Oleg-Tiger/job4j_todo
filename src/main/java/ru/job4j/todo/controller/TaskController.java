@@ -1,5 +1,6 @@
 package ru.job4j.todo.controller;
 
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -12,23 +13,18 @@ import java.util.Optional;
 
 @RequestMapping("/tasks")
 @Controller
+@AllArgsConstructor
 public class TaskController {
 
     private final TaskService taskService;
     private final PriorityService priorityService;
     private final CategoryService categoryService;
 
-    public TaskController(TaskService taskService, PriorityService priorityService, CategoryService categoryService) {
-        this.taskService = taskService;
-        this.priorityService = priorityService;
-        this.categoryService = categoryService;
-    }
-
     @GetMapping("/")
     public String all(Model model, HttpSession httpSession) {
         User user = UserUtil.getUserFromSession(httpSession);
         model.addAttribute("user", user);
-        model.addAttribute("tasks", taskService.findAll());
+        model.addAttribute("tasks", taskService.findAll(user));
         return "task/all";
     }
 
@@ -58,16 +54,16 @@ public class TaskController {
     @GetMapping("/completed")
     public String completed(Model model, HttpSession httpSession) {
         User user = UserUtil.getUserFromSession(httpSession);
+        model.addAttribute("completedTasks", taskService.findFilter(true, user));
         model.addAttribute("user", user);
-        model.addAttribute("completedTasks", taskService.findFilter(true));
         return "task/completed";
     }
 
     @GetMapping("/new")
     public String taskNew(Model model, HttpSession httpSession) {
         User user = UserUtil.getUserFromSession(httpSession);
+        model.addAttribute("newTasks", taskService.findFilter(false, user));
         model.addAttribute("user", user);
-        model.addAttribute("newTasks", taskService.findFilter(false));
         return "task/new";
     }
 

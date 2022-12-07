@@ -4,6 +4,7 @@ import org.springframework.stereotype.Service;
 import ru.job4j.todo.model.User;
 import ru.job4j.todo.repository.UserRepository;
 import java.util.Optional;
+import java.util.TimeZone;
 
 @Service
 public class HbmUserService implements UserService {
@@ -15,7 +16,11 @@ public class HbmUserService implements UserService {
     }
 
     @Override
-    public Optional<User> add(User user) {
+    public Optional<User> add(User user, String userZoneId) {
+        if (userZoneId.equals("default")) {
+            userZoneId = TimeZone.getDefault().getID();
+        }
+        user.setUserZone(userZoneId);
         return repository.add(user);
     }
 

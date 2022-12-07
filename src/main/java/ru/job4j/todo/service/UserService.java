@@ -5,7 +5,7 @@ import java.util.Optional;
 
 public interface UserService {
 
-    Optional<User> add(User user);
+    Optional<User> add(User user, String userZoneId);
 
     Optional<User> findUserByEmailAndPassword(String email, String password);
 }
